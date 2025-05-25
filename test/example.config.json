@@ -1,0 +1,27 @@
+{
+  "recovery-images": {
+    "official": {
+      "board": {
+        "v131": "./cdn/a.txt"
+      }
+    },
+    "pre-builts": {
+      "bad-recovery": {
+        "board": "./cdn/b.txt"
+      },
+      "e-halycon": {
+        "board": "./cdn/c.txt"
+      }
+    }
+  },
+  "rma-shims": {
+    "raw": {
+      "board": "./cdn/d.txt"
+    },
+    "pre-builts": {
+      "sh1mmer-legacy": {
+        "board": "./cdn/e.txt"
+      }
+    }
+  }
+}
