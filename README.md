@@ -55,5 +55,5 @@ board = chromeos-board
 https://ddl.example.com/reco?type=&board=&?ver=
 type = official/name-of-prebuilt
 board = chromos-board
-version (optional, for official images) = chromeos-version
+version (optional, for official images) = chromeos-version (v111)
 ```
