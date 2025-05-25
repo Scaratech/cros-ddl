@@ -12,22 +12,29 @@ router.get('/reco', (req, res) => {
 
     if (!type || !board) return res.status(400).json({ error: 'Missing type or board' });
 
-    const rType = config['recovery-images'][type];
-    if (!rType) return res.status(404).json({ error: 'Recovery type not found' });
-
-    let path: string | undefined;
-
     if (type === 'official') {
+        const official = config['recovery-images']['official'];
+
+        if (!official) return res.status(404).json({ error: 'Official recovery images not found' });
         if (!version) return res.status(400).json({ error: 'Missing version for official image' });
 
-        path = rType[board]?.[version];
+        const path = official[board]?.[version];
+        if (!path) return res.status(404).json({ error: 'Recovery image not found' });
+
+        doesExist(res, path);
     } else {
-        path = rType[board];
+        const preBuilts = config['recovery-images']['pre-builts'];
+        if (!preBuilts) return res.status(404).json({ error: 'Pre-built recovery images not found' });
+
+        const group = preBuilts[type];
+        if (!group) return res.status(404).json({ error: 'Recovery type not found' });
+
+        const path = group[board];
+        if (!path) return res.status(404).json({ error: 'Recovery image not found' });
+
+        doesExist(res, path);
     }
-
-    if (!path) return res.status(404).json({ error: 'Recovery image not found' });
-
-    doesExist(res, path);
 });
+
 
 export default router;

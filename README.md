@@ -11,7 +11,7 @@ $ pnpm start
 ```
 
 ## Configuration
-config.json
+Example `config.json`
 ```json
 {
     "recovery-images": {

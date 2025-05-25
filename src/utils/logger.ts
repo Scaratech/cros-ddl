@@ -1,25 +1,41 @@
-import { createWriteStream } from 'fs';
-import { fileURLToPath } from 'url';
-import { dirname, resolve } from 'path';
+import { writeFileSync, existsSync, readFileSync } from 'fs';
+import { join } from 'path';
 import { Request, Response, NextFunction } from 'express';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const logPath = join(process.cwd(), 'log.json');
 
-const path = resolve(__dirname, '../usage.log');
+export function logger(req: Request, res: Response, next: NextFunction) {
+    res.on('finish', () => {
+        const entry = {
+            timestamp: Math.floor(Date.now() / 1000),
+            ip: req.ip,
+            path: req.path,
+            query: req.query,
+            method: req.method,
+            status: res.statusCode
+        };
 
-const stream = createWriteStream(path, { flags: 'a' });
+        let logs = { logs: [] as any[] };
 
-export function requestLogger(req: Request, _res: Response, next: NextFunction) {
-    const timestamp = Math.floor(Date.now() / 1000);
-    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown';
+        if (existsSync(logPath)) {
+            try {
+                const raw = readFileSync(logPath, 'utf-8');
+                logs = JSON.parse(raw);
 
-    const query = Object.entries(req.query)
-        .map(([k, v]) => `${k}=${v}`)
-        .join('&');
+                if (!Array.isArray(logs.logs)) logs.logs = [];
+            } catch {
+                logs.logs = [];
+            }
+        }
 
-    const line = `[${timestamp}] ${ip} ${req.path}${query ? '?' + query : ''}\n`;
-    stream.write(line);
+        logs.logs.push(entry);
+
+        try {
+            writeFileSync(logPath, JSON.stringify(logs, null, 2));
+        } catch (e) {
+            console.error('Failed to write log:', e);
+        }
+    });
 
     next();
 }
