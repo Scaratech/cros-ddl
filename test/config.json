@@ -1,0 +1,27 @@
+{
+  "shim": [
+    {
+      "type": "raw",
+      "board": "board"
+    },
+    {
+      "type": "sh1mmer-legacy",
+      "board": "board"
+    }
+  ],
+  "reco": [
+    {
+      "type": "official",
+      "board": "board",
+      "ver": "v131"
+    },
+    {
+      "type": "bad-recovery",
+      "board": "board"
+    },
+    {
+      "type": "e-halycon",
+      "board": "board"
+    }
+  ]
+}
